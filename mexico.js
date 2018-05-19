@@ -89,7 +89,7 @@ d3.csv("mexicoPopulation.csv", rowConverter, function (popData) {
             .on("zoom", zooming);
 
         svg.call(zoom)
-            .call(zoom.transform, d3.zoomIdentity.translate(-originalTranslation));
+            .call(zoom.transform, d3.zoomIdentity.translate(originalTranslation[0], originalTranslation[1]));
 
         svg.selectAll("path")
             .data(json.features)
@@ -111,7 +111,12 @@ d3.csv("mexicoPopulation.csv", rowConverter, function (popData) {
 
         function zooming() {
             let offset = [d3.event.transform.x, d3.event.transform.y];
-            let newScale = d3.event.transform.k * 1;
+            let newScale = d3.event.transform.k * originalScale;
+            projection.translate(offset)
+                .scale(newScale);
+            svg.selectAll("path")
+                .attr("d", path);
+
         }
     });
 });
